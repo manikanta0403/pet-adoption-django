@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ accessory.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6">
+            {% if accessory.image %}
+            <img src="{{ accessory.image.url }}" class="img-fluid rounded" alt="{{ accessory.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/600x400?text={{ accessory.name }}" class="img-fluid rounded" alt="{{ accessory.name }}">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h1>{{ accessory.name }}</h1>
+            {% if accessory.category %}
+            <p class="text-muted">{{ accessory.category.name }}</p>
+            {% endif %}
+            <hr>
+            
+            <div class="mb-3">
+                <h3 class="text-primary">₹{{ accessory.price|floatformat:2 }}</h3>
+                {% if accessory.in_stock %}
+                <span class="badge bg-success">In Stock ({{ accessory.stock_quantity }} available)</span>
+                {% else %}
+                <span class="badge bg-danger">Out of Stock</span>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <h5>Description</h5>
+                <p>{{ accessory.description }}</p>
+            </div>
+            
+            {% if accessory.brand %}
+            <p><strong>Brand:</strong> {{ accessory.brand }}</p>
+            {% endif %}
+            
+            {% if user.is_authenticated %}
+                {% if accessory.in_stock %}
+                <form method="post" action="{% url 'accessories:add_to_cart' accessory.id %}" class="mb-3">
+                    {% csrf_token %}
+                    <div class="row align-items-center">
+                        <div class="col-4">
+                            <label class="form-label">Quantity:</label>
+                            <input type="number" name="quantity" value="1" min="1" max="{{ accessory.stock_quantity }}" class="form-control">
+                        </div>
+                        <div class="col-8">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">
+                                {% if in_cart %}Update Cart{% else %}Add to Cart{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+            {% else %}
+            <a href="{% url 'users:login' %}" class="btn btn-primary btn-lg">Login to Add to Cart</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

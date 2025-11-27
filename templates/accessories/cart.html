@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Shopping Cart</h1>
+    
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    {% for item in cart_items %}
+                    <div class="row align-items-center mb-3 pb-3 border-bottom">
+                        <div class="col-md-3">
+                            {% if item.accessory.image %}
+                            <img src="{{ item.accessory.image.url }}" class="img-fluid rounded" alt="{{ item.accessory.name }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/150?text={{ item.accessory.name }}" class="img-fluid rounded" alt="{{ item.accessory.name }}">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-5">
+                            <h5>{{ item.accessory.name }}</h5>
+                            <p class="text-muted mb-0">₹{{ item.accessory.price }} each</p>
+                        </div>
+                        <div class="col-md-2">
+                            <form method="post" action="{% url 'accessories:update_cart' item.id %}">
+                                {% csrf_token %}
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.accessory.stock_quantity }}" class="form-control" onchange="this.form.submit()">
+                            </form>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <p class="h5 mb-0">₹{{ item.total_price|floatformat:2 }}</p>
+                            <a href="{% url 'accessories:remove_from_cart' item.id %}" class="btn btn-sm btn-danger mt-2">Remove</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>₹{{ total|floatformat:2 }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Subtotal:</strong>
+                        <strong>₹{{ total|floatformat:2 }}</strong>
+                    </div>
+                    <p class="text-muted small">Shipping and tax will be calculated at checkout</p>
+                    <a href="{% url 'orders:checkout' %}" class="btn btn-primary w-100">Proceed to Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <h4>Your cart is empty</h4>
+        <p>Start shopping to add items to your cart!</p>
+        <a href="{% url 'accessories:accessory_list' %}" class="btn btn-primary">Browse Accessories</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

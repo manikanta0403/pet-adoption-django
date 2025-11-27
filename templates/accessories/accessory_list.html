@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Accessories{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Pet Accessories</h1>
+    
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ search_query }}">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="category">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.slug }}" {% if category_slug == category.slug %}selected{% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" name="min_price" placeholder="Min Price" value="{{ min_price }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" name="max_price" placeholder="Max Price" value="{{ max_price }}">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="sort">
+                        <option value="">Sort By</option>
+                        <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    {% if page_obj %}
+    <div class="row g-4">
+        {% for accessory in page_obj %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card accessory-card">
+                {% if accessory.image %}
+                <img src="{{ accessory.image.url }}" class="card-img-top" alt="{{ accessory.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/300x250?text={{ accessory.name }}" class="card-img-top" alt="{{ accessory.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ accessory.name }}</h5>
+                    <p class="card-text text-muted small">{{ accessory.category.name }}</p>
+                    <p class="h5 text-primary mb-2">₹{{ accessory.price|floatformat:2 }}</p>
+                    {% if accessory.in_stock %}
+                    <a href="{% url 'accessories:accessory_detail' accessory.slug %}" class="btn btn-primary btn-sm w-100">View Details</a>
+                    {% else %}
+                    <button class="btn btn-secondary btn-sm w-100" disabled>Out of Stock</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    {% else %}
+    <div class="alert alert-info">No accessories found.</div>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Adoption - {{ pet.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Adoption Request for {{ pet.name }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Pet Information</h5>
+                        <p><strong>Name:</strong> {{ pet.name }}</p>
+                        <p><strong>Type:</strong> {{ pet.get_pet_type_display }}</p>
+                        <p><strong>Breed:</strong> {{ pet.breed }}</p>
+                        <p><strong>Age:</strong> {{ pet.age }} years</p>
+                        <p><strong>Location:</strong> {{ pet.location }}</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Why do you want to adopt this pet?</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}
+                                <div class="text-danger small">{{ form.message.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact Preference</label>
+                            {{ form.contact_preference }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        <a href="{% url 'pets:pet_detail' pet.pk %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
