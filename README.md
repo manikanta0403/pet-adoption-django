@@ -229,10 +229,10 @@ This project is licensed under the MIT License - see LICENSE file for details.
 
 ## 👨‍💻 Author
 
-**[Your Name]**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+**[Balla Naga Venkata Vyagiri Mani Kanta]**
+- GitHub: [@manikanta0403](https://github.com/yourusername)
+- Email: 2200080032aids@gmail.com
+- LinkedIn: https://www.linkedin.com/in/manikanta-balla/
 
 ## 🙏 Acknowledgments
 
@@ -241,12 +241,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 - Bootstrap for responsive design framework
 - All contributors and testers
 
-## 📞 Support
 
-For issues, questions, or suggestions, please:
-- Open an issue on GitHub
-- Contact: support@example.com
-- Join our Discord community
 
 ## 🗺️ Roadmap
 
